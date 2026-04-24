@@ -12,7 +12,17 @@ class AppointmentController extends Controller
     public function index()
     {
         $appointments = Appointment::with(['patient', 'doctor', 'service'])->latest()->paginate(10);
-        return view('appointments.index', compact('appointments'));
+
+        $patients = User::where('role', 'patient')->get();
+        $doctors  = User::where('role', 'doctor')->get();
+        $services = Service::all();
+
+        return view('appointments.index', compact(
+            'appointments', 
+            'patients', 
+            'doctors', 
+            'services'
+        ));
     }
 
     public function create()
