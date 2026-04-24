@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AppointmentController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,3 +29,4 @@ Route::get('/lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('lang.switch');
 
+Route::resource('appointments', AppointmentController::class)->middleware(['auth']);
