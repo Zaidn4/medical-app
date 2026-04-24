@@ -1,13 +1,10 @@
-<aside class="flex flex-col w-64 h-screen px-4 py-8 overflow-y-auto bg-white border-r">
-    <h2 class="text-3xl font-semibold text-blue-600 text-center">MedApp</h2>
-    <div class="flex flex-col justify-between flex-1 mt-6">
-        <nav>
-            <a class="flex items-center px-4 py-2 text-gray-700 bg-gray-100 rounded-md" href="#">
-                <span class="mx-4 font-medium">Dashboard</span>
-            </a>
-            <a class="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-md hover:bg-gray-100 hover:text-gray-700" href="#">
-                <span class="mx-4 font-medium">Rendez-vous</span>
-            </a>
-        </nav>
+<aside class="w-64 bg-gray-800 text-white min-h-screen flex flex-col">
+    <div class="p-4 text-center text-2xl font-bold border-b border-gray-700">
+        Menu
     </div>
+    <nav class="flex-1 px-4 py-6 space-y-3">
+        <a href="{{ route('dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-700 transition-colors">
+            Tableau de Bord
+        </a>
+    </nav>
 </aside>
