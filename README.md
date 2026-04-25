@@ -51,29 +51,31 @@ L'application expose une API pour interagir avec les rendez-vous.
     Endpoint : GET /api/appointments
     Description : Retourne la liste complète des rendez-vous au format JSON (incluant les relations : patient, docteur, service).
     Headers requis : Accept: application/json
-    Exemple de réponse :JSON[
-                        {
-                            "id": 1,
-                            "patient_id": 2,
-                            "doctor_id": 1,
-                            "service_id": 1,
-                            "appointment_date": "2026-05-15T10:00:00.000000Z",
-                            "status": "confirmed",
-                            "patient": { "id": 2, "name": "Jean Dupont" },
-                            "doctor": { "id": 1, "name": "Dr. House" },
-                            "service": { "id": 1, "name": "Consultation Générale" }
-                        }
-                        ]
+    Exemple de réponse :JSON
+[
+  {
+    "id": 1,
+    "patient_id": 2,
+    "doctor_id": 1,
+    "service_id": 1,
+    "appointment_date": "2026-05-15T10:00:00.000000Z",
+    "status": "confirmed",
+    "patient": { "id": 2, "name": "Jean Dupont" },
+    "doctor": { "id": 1, "name": "Dr. House" },
+    "service": { "id": 1, "name": "Consultation Générale" }
+  }
+]
 2. Créer un rendez-vous
 *Endpoint : POST /api/appointmentsDescription : Crée un nouveau rendez-vous via une requête externe.
-*Headers requis : Accept: application/json, Content-Type: application/jsonPayload (Corps de la requête) :JSON{
-                        "patient_id": 2,
-                        "doctor_id": 1,
-                        "service_id": 1,
-                        "appointment_date": "2026-05-15 10:00:00",
-                        "status": "confirmed",
-                        "notes": "Première consultation"
-                    }
+*Headers requis : Accept: application/json, Content-Type: application/jsonPayload (Corps de la requête) :JSON
+{
+    "patient_id": 2,
+    "doctor_id": 1,
+    "service_id": 1,
+    "appointment_date": "2026-05-15 10:00:00",
+    "status": "confirmed",
+    "notes": "Première consultation"
+}
 Exemple de réponse (201 Created) :JSON{
     "message": "Rendez-vous créé avec succès",
     "data": {
