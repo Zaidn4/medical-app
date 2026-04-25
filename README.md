@@ -58,17 +58,17 @@ L'application expose une API pour interagir avec les rendez-vous.
     Exemple de réponse :
     ```bash
 JSON[
-  {
-    "id": 1,
-    "patient_id": 2,
-    "doctor_id": 1,
-    "service_id": 1,
-    "appointment_date": "2026-05-15T10:00:00.000000Z",
-    "status": "confirmed",
-    "patient": { "id": 2, "name": "Jean Dupont" },
-    "doctor": { "id": 1, "name": "Dr. House" },
-    "service": { "id": 1, "name": "Consultation Générale" }
-  }
+{
+"id": 1,
+"patient_id": 2,
+"doctor_id": 1,
+"service_id": 1,
+"appointment_date": "2026-05-15T10:00:00.000000Z",
+"status": "confirmed",
+"patient": { "id": 2, "name": "Jean Dupont" },
+"doctor": { "id": 1, "name": "Dr. House" },
+"service": { "id": 1, "name": "Consultation Générale" }
+}
 ]
 2. Créer un rendez-vous
 *Endpoint : POST /api/appointmentsDescription : Crée un nouveau rendez-vous via une requête externe.
@@ -83,7 +83,7 @@ JSON{
     "notes": "Première consultation"
 }
 Exemple de réponse (201 Created) :
-```bash
+
 JSON{
     "message": "Rendez-vous créé avec succès",
     "data": {
