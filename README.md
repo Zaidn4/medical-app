@@ -56,7 +56,7 @@ L'application expose une API pour interagir avec les rendez-vous.
     Description : Retourne la liste complète des rendez-vous au format JSON (incluant les relations : patient, docteur, service).
     Headers requis : Accept: application/json
     Exemple de réponse :
-    ```bash
+```bash
 JSON[
 {
 "id": 1,
