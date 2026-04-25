@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\User;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use App\Events\AppointmentCreated;
 
 class AppointmentController extends Controller
 {
@@ -33,7 +34,7 @@ class AppointmentController extends Controller
         return view('appointments.create', compact('patients', 'doctors', 'services'));
     }
 
-    public function store(Request $request)
+   public function store(Request $request)
     {
         $validated = $request->validate([
             'patient_id' => 'required|exists:users,id',
@@ -44,7 +45,10 @@ class AppointmentController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        Appointment::create($validated);
+        $appointment = Appointment::create($validated);
+
+        // Dispatch the event to trigger the email
+        AppointmentCreated::dispatch($appointment);
 
         return redirect()->route('appointments.index')->with('success', 'Rendez-vous créé.');
     }
