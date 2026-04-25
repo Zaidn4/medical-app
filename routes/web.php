@@ -4,7 +4,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppointmentController;
 
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -21,7 +20,6 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-
 Route::get('/lang/{locale}', function ($locale) {
     if (in_array($locale, ['fr', 'en', 'ar', 'es'])) {
         session()->put('locale', $locale);
@@ -29,5 +27,6 @@ Route::get('/lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('lang.switch');
 
-Route::get('/appointments/search', [AppointmentController::class, 'search'])->name('appointments.search');
+// Web Appointment Routes
+Route::get('/appointments/search', [AppointmentController::class, 'search'])->name('appointments.search')->middleware('auth');
 Route::resource('appointments', AppointmentController::class)->middleware(['auth']);
