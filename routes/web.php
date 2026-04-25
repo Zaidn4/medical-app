@@ -29,4 +29,5 @@ Route::get('/lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('lang.switch');
 
+Route::get('/appointments/search', [AppointmentController::class, 'search'])->name('appointments.search');
 Route::resource('appointments', AppointmentController::class)->middleware(['auth']);

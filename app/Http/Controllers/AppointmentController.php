@@ -85,4 +85,40 @@ class AppointmentController extends Controller
         $appointment->delete();
         return redirect()->route('appointments.index')->with('success', 'Rendez-vous supprimé.');
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        $appointmentsQuery = Appointment::with(['patient', 'doctor', 'service'])->latest();
+
+        if (!empty($query)) {
+            $appointmentsQuery->whereHas('patient', function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%");
+            })
+            ->orWhereHas('doctor', function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%");
+            })
+            ->orWhereHas('service', function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%");
+            })
+            ->orWhere('status', 'like', "%{$query}%");
+        }
+
+        $appointments = $appointmentsQuery->take(30)->get();
+
+        $formattedAppointments = $appointments->map(function ($app) {
+            return [
+                'id' => $app->id,
+                'date' => $app->appointment_date->format('d/m/Y H:i'),
+                'patient' => $app->patient->name,
+                'doctor' => $app->doctor->name,
+                'service' => $app->service->name,
+                'status' => ucfirst($app->status),
+                'edit_url' => route('appointments.edit', $app->id)
+            ];
+        });
+
+        return response()->json($formattedAppointments);
+    }
 }

@@ -13,6 +13,11 @@
         <div class="bg-green-100 text-green-800 p-4 rounded mb-4">{{ session('success') }}</div>
     @endif
 
+    <div class="mb-4">
+        <input type="text" id="searchInput" placeholder="Rechercher un patient, médecin, service ou statut..." 
+               class="w-full md:w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2">
+    </div>
+
     <div class="bg-white shadow-md rounded my-6">
         <table class="text-left w-full border-collapse">
             <thead>
@@ -25,7 +30,7 @@
                     <th class="py-4 px-6 bg-gray-100 font-bold uppercase text-sm text-gray-600 border-b border-gray-200">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="appointmentsTableBody">
                 @foreach($appointments as $appointment)
                 <tr class="hover:bg-gray-50">
                     <td class="py-4 px-6 border-b border-gray-200">{{ $appointment->appointment_date->format('d/m/Y H:i') }}</td>
@@ -44,7 +49,7 @@
                 @endforeach
             </tbody>
         </table>
-        <div class="p-4">
+        <div class="p-4" id="paginationLinks">
             {{ $appointments->links() }}
         </div>
     </div>
@@ -168,5 +173,52 @@
             openAddModal();
         });
     @endif
+
+    // Axios Real-Time Search Logic
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        let query = e.target.value;
+
+        // Perform the asynchronous request
+        axios.get(`/appointments/search?query=${query}`)
+            .then(response => {
+                let rows = '';
+                let appointments = response.data;
+
+                if (appointments.length === 0) {
+                    rows = `<tr><td colspan="6" class="py-4 px-6 text-center text-gray-500">Aucun rendez-vous trouvé.</td></tr>`;
+                } else {
+                    // Rebuild the table rows dynamically
+                    appointments.forEach(app => {
+                        rows += `
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-4 px-6 border-b border-gray-200">${app.date}</td>
+                            <td class="py-4 px-6 border-b border-gray-200">${app.patient}</td>
+                            <td class="py-4 px-6 border-b border-gray-200">${app.doctor}</td>
+                            <td class="py-4 px-6 border-b border-gray-200">${app.service}</td>
+                            <td class="py-4 px-6 border-b border-gray-200">${app.status}</td>
+                            <td class="py-4 px-6 border-b border-gray-200 flex gap-4">
+                                <a href="${app.edit_url}" class="text-blue-500 hover:text-blue-700 font-medium">Modifier</a>
+                                <button type="button" onclick="openDeleteModal(${app.id})" class="text-red-600 hover:text-red-900 font-medium">
+                                    Supprimer
+                                </button>
+                            </td>
+                        </tr>
+                        `;
+                    });
+                }
+
+                // Inject the new rows into the table body
+                document.getElementById('appointmentsTableBody').innerHTML = rows;
+
+                // Hide pagination links if user is searching, show them if input is cleared
+                const pagination = document.getElementById('paginationLinks');
+                if (pagination) {
+                    pagination.style.display = query.length > 0 ? 'none' : 'block';
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de la recherche:", error);
+            });
+    });
 </script>
 @endsection
