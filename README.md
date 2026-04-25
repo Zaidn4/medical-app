@@ -75,7 +75,6 @@ JSON[
 *Endpoint : POST /api/appointmentsDescription : Crée un nouveau rendez-vous via une requête externe.
 *Headers requis : Accept: application/json, Content-Type: application/jsonPayload (Corps de la requête) :
 
-```bash
 JSON{
     "patient_id": 2,
     "doctor_id": 1,
@@ -86,7 +85,6 @@ JSON{
 }
 Exemple de réponse (201 Created) :
 
-```bash
 JSON{
     "message": "Rendez-vous créé avec succès",
     "data": {
