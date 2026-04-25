@@ -1,4 +1,4 @@
-content = """# Cabinet Médical - Système de Gestion des Rendez-vous
+# Cabinet Médical - Système de Gestion des Rendez-vous
 
 Une application Laravel moderne pour la gestion des rendez-vous médicaux, offrant des interfaces distinctes pour les médecins et les patients, une recherche en temps réel, un support multilingue et une API REST.
 
