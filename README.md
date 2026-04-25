@@ -19,20 +19,24 @@ Suivez ces étapes pour configurer le projet localement :
    cd cabinet-medical
 
 2. **Installer les dépendances PHP et Node :**
+    ```bash
     composer install
     npm install
     npm run build
 
 3. **Configuration de l'environnement :**
+    ```bash
     cp .env.example .env
     php artisan key:generate
 Configurez vos accès base de données et votre serveur SMTP (ou MAIL_MAILER=log) dans le fichier .env.
 
 4. **Migrations et Seeders :**
 Cette commande va créer les tables et populer la base avec les données de test (utilisateurs, services, etc.).
+    ```bash
     php artisan migrate --seed
 
 5. **Lancer le serveur :**
+    ```bash
     php artisan serve
 L'application sera accessible sur http://localhost:8000.
 
@@ -51,8 +55,9 @@ L'application expose une API pour interagir avec les rendez-vous.
     Endpoint : GET /api/appointments
     Description : Retourne la liste complète des rendez-vous au format JSON (incluant les relations : patient, docteur, service).
     Headers requis : Accept: application/json
-    Exemple de réponse :JSON
-[
+    Exemple de réponse :
+    ```bash
+JSON[
   {
     "id": 1,
     "patient_id": 2,
@@ -67,8 +72,9 @@ L'application expose une API pour interagir avec les rendez-vous.
 ]
 2. Créer un rendez-vous
 *Endpoint : POST /api/appointmentsDescription : Crée un nouveau rendez-vous via une requête externe.
-*Headers requis : Accept: application/json, Content-Type: application/jsonPayload (Corps de la requête) :JSON
-{
+*Headers requis : Accept: application/json, Content-Type: application/jsonPayload (Corps de la requête) :
+```bash
+JSON{
     "patient_id": 2,
     "doctor_id": 1,
     "service_id": 1,
@@ -76,7 +82,9 @@ L'application expose une API pour interagir avec les rendez-vous.
     "status": "confirmed",
     "notes": "Première consultation"
 }
-Exemple de réponse (201 Created) :JSON{
+Exemple de réponse (201 Created) :
+```bash
+JSON{
     "message": "Rendez-vous créé avec succès",
     "data": {
         "patient_id": 2,
