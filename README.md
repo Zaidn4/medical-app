@@ -1,58 +1,88 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+content = """# Cabinet Médical - Système de Gestion des Rendez-vous
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Une application Laravel moderne pour la gestion des rendez-vous médicaux, offrant des interfaces distinctes pour les médecins et les patients, une recherche en temps réel, un support multilingue et une API REST.
 
-## About Laravel
+## 📋 Fonctionnalités Principales
+* **Rôles (RBAC) :** Espaces séparés pour `doctor` (gestion globale) et `patient` (gestion personnelle).
+* **Rendez-vous :** Création, modification, suppression et recherche en temps réel (Axios).
+* **Notifications :** Envoi automatique d'emails de confirmation lors de la création d'un rendez-vous.
+* **Multilingue :** Support de l'anglais, l'espagnol, l'arabe et le français.
+* **API REST :** Points d'accès pour l'intégration de systèmes tiers.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Installation
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Suivez ces étapes pour configurer le projet localement :
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Cloner le dépôt :**
+   ```bash
+   git clone git@github.com:Zaidn4/medical-app.git
+   cd cabinet-medical
 
-## Learning Laravel
+2. **Installer les dépendances PHP et Node :**
+    composer install
+    npm install
+    npm run build
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3. **Configuration de l'environnement :**
+    cp .env.example .env
+    php artisan key:generate
+Configurez vos accès base de données et votre serveur SMTP (ou MAIL_MAILER=log) dans le fichier .env.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4. **Migrations et Seeders :**
+Cette commande va créer les tables et populer la base avec les données de test (utilisateurs, services, etc.).
+    php artisan migrate --seed
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+5. **Lancer le serveur :**
+    php artisan serve
+L'application sera accessible sur http://localhost:8000.
 
-## Agentic Development
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 🔐 Identifiants par Défaut (Seeders)
+Une fois les seeders exécutés (php artisan migrate --seed), vous pouvez vous connecter avec les comptes de test suivants :
+Rôle                              Email                      Mot de passe    
+Médecin                     doctor@example.com                 password
+Patient                     patient@example.com                password
+(Note : Ajustez ces emails si vous avez défini d'autres valeurs exactes dans vos fichiers DatabaseSeeder.php)  
 
-```bash
-composer require laravel/boost --dev
 
-php artisan boost:install
-```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📡 Documentation de l'API REST
+L'application expose une API pour interagir avec les rendez-vous.
+1. Lister les rendez-vous:
+    Endpoint : GET /api/appointments
+    Description : Retourne la liste complète des rendez-vous au format JSON (incluant les relations : patient, docteur, service).
+    Headers requis : Accept: application/json
+    Exemple de réponse :JSON[
+                        {
+                            "id": 1,
+                            "patient_id": 2,
+                            "doctor_id": 1,
+                            "service_id": 1,
+                            "appointment_date": "2026-05-15T10:00:00.000000Z",
+                            "status": "confirmed",
+                            "patient": { "id": 2, "name": "Jean Dupont" },
+                            "doctor": { "id": 1, "name": "Dr. House" },
+                            "service": { "id": 1, "name": "Consultation Générale" }
+                        }
+                        ]
+2. Créer un rendez-vous
+*Endpoint : POST /api/appointmentsDescription : Crée un nouveau rendez-vous via une requête externe.
+*Headers requis : Accept: application/json, Content-Type: application/jsonPayload (Corps de la requête) :JSON{
+                        "patient_id": 2,
+                        "doctor_id": 1,
+                        "service_id": 1,
+                        "appointment_date": "2026-05-15 10:00:00",
+                        "status": "confirmed",
+                        "notes": "Première consultation"
+                    }
+Exemple de réponse (201 Created) :JSON{
+    "message": "Rendez-vous créé avec succès",
+    "data": {
+        "patient_id": 2,
+        "doctor_id": 1,
+        "service_id": 1,
+        "appointment_date": "2026-05-15T10:00:00.000000Z",
+        "status": "confirmed",
+        "notes": "Première consultation",
+        "id": 15
+    }
+}
