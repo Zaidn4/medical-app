@@ -12,7 +12,13 @@ class AppointmentController extends Controller
 {
     public function index()
     {
-        $appointments = Appointment::with(['patient', 'doctor', 'service'])->latest()->paginate(10);
+        $query = Appointment::with(['patient', 'doctor', 'service'])->latest();
+
+        if (auth()->user()->isPatient()) {
+            $query->where('patient_id', auth()->id());
+        }
+
+        $appointments = $query->paginate(10);
 
         $patients = User::where('role', 'patient')->get();
         $doctors  = User::where('role', 'doctor')->get();
@@ -37,7 +43,7 @@ class AppointmentController extends Controller
    public function store(Request $request)
     {
         $validated = $request->validate([
-            'patient_id' => 'required|exists:users,id',
+            'patient_id' => 'sometimes|required|exists:users,id',
             'doctor_id' => 'required|exists:users,id',
             'service_id' => 'required|exists:services,id',
             'appointment_date' => 'required|date',
@@ -45,10 +51,13 @@ class AppointmentController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        if (auth()->user()->isPatient()) {
+            $validated['patient_id'] = auth()->id();
+        }
+
         $appointment = Appointment::create($validated);
 
-        // Dispatch the event to trigger the email
-        AppointmentCreated::dispatch($appointment);
+        \App\Events\AppointmentCreated::dispatch($appointment);
 
         return redirect()->route('appointments.index')->with('success', 'Rendez-vous créé.');
     }
@@ -61,6 +70,11 @@ class AppointmentController extends Controller
 
     public function edit(Appointment $appointment)
     {
+        // SECURITY: Prevent patients from editing other people's appointments
+        if (auth()->user()->isPatient() && $appointment->patient_id !== auth()->id()) {
+            abort(403, 'Accès non autorisé.');
+        }
+
         $patients = User::where('role', 'patient')->get();
         $doctors = User::where('role', 'doctor')->get();
         $services = Service::all();
@@ -70,14 +84,22 @@ class AppointmentController extends Controller
 
     public function update(Request $request, Appointment $appointment)
     {
+        if (auth()->user()->isPatient() && $appointment->patient_id !== auth()->id()) {
+            abort(403, 'Accès non autorisé.');
+        }
+
         $validated = $request->validate([
-            'patient_id' => 'required|exists:users,id',
+            'patient_id' => 'sometimes|required|exists:users,id',
             'doctor_id' => 'required|exists:users,id',
             'service_id' => 'required|exists:services,id',
             'appointment_date' => 'required|date',
             'status' => 'required|in:pending,confirmed,canceled',
             'notes' => 'nullable|string',
         ]);
+
+        if (auth()->user()->isPatient()) {
+            $validated['patient_id'] = auth()->id();
+        }
 
         $appointment->update($validated);
 
@@ -86,6 +108,10 @@ class AppointmentController extends Controller
 
     public function destroy(Appointment $appointment)
     {
+        if (auth()->user()->isPatient() && $appointment->patient_id !== auth()->id()) {
+            abort(403, 'Accès non autorisé.');
+        }
+
         $appointment->delete();
         return redirect()->route('appointments.index')->with('success', 'Rendez-vous supprimé.');
     }
@@ -96,17 +122,27 @@ class AppointmentController extends Controller
 
         $appointmentsQuery = Appointment::with(['patient', 'doctor', 'service'])->latest();
 
+        // SECURITY 1: If the user is a patient, STRICTLY limit the query to their own ID
+        if (auth()->user()->isPatient()) {
+            $appointmentsQuery->where('patient_id', auth()->id());
+        }
+
+        // If a query exists, apply the search filters
         if (!empty($query)) {
-            $appointmentsQuery->whereHas('patient', function ($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%");
-            })
-            ->orWhereHas('doctor', function ($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%");
-            })
-            ->orWhereHas('service', function ($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%");
-            })
-            ->orWhere('status', 'like', "%{$query}%");
+            // SECURITY 2: Wrap all 'orWhere' clauses inside a where() closure. 
+            // This translates to: WHERE patient_id = X AND (name LIKE Y OR status LIKE Y...)
+            $appointmentsQuery->where(function ($q) use ($query) {
+                $q->whereHas('patient', function ($subQ) use ($query) {
+                    $subQ->where('name', 'like', "%{$query}%");
+                })
+                ->orWhereHas('doctor', function ($subQ) use ($query) {
+                    $subQ->where('name', 'like', "%{$query}%");
+                })
+                ->orWhereHas('service', function ($subQ) use ($query) {
+                    $subQ->where('name', 'like', "%{$query}%");
+                })
+                ->orWhere('status', 'like', "%{$query}%");
+            });
         }
 
         $appointments = $appointmentsQuery->take(30)->get();
@@ -119,7 +155,13 @@ class AppointmentController extends Controller
                 'doctor' => $app->doctor->name,
                 'service' => $app->service->name,
                 'status' => ucfirst($app->status),
-                'edit_url' => route('appointments.edit', $app->id)
+                
+                // Raw data needed for the Edit Modal
+                'patient_id' => $app->patient_id,
+                'doctor_id' => $app->doctor_id,
+                'service_id' => $app->service_id,
+                'raw_date' => $app->appointment_date->format('Y-m-d\TH:i'),
+                'status_raw' => $app->status,
             ];
         });
 

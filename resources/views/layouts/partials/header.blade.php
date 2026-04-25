@@ -21,7 +21,7 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="text-gray-600 hover:text-gray-900 font-medium">
-                    Déconnexion
+                     {{ __('Déconnexion') }}   
                 </button>
             </form>
         </div>
