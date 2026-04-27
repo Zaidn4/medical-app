@@ -24,5 +24,18 @@
     "Date et Heure": "Date and Time",
     "Ajout Rapide : Rendez-vous": "Quick Add: Appointment",
     "Modifier le Rendez-vous": "Edit Appointment",
-    "Menu": "Menu"
+    "Menu": "Menu",
+    "Ajouter un Nouveau Patient": "Add a New Patient",
+    "Ajouter un Patient": "Add Patient",
+    "Retour aux rendez-vous": "Back to appointments",
+    "Nom complet": "Full Name",
+    "Adresse Email": "Email Address",
+    "Mot de passe temporaire": "Temporary Password",
+    "Confirmer le mot de passe": "Confirm Password",
+    "Créer le dossier patient": "Create Patient File",
+    "Patient ajouté avec succès. Vous pouvez maintenant lui assigner un rendez-vous.": "Patient successfully added. You can now assign them an appointment.",
+    "Total Patients": "Total Patients",
+    "Total Rendez-vous": "Total Appointments",
+    "Rendez-vous Aujourd'hui": "Appointments Today",
+    "Rendez-vous à venir": "Upcoming Appointments"
 }

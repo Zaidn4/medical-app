@@ -41,26 +41,26 @@ class AppointmentController extends Controller
     }
 
    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'patient_id' => 'sometimes|required|exists:users,id',
-            'doctor_id' => 'required|exists:users,id',
-            'service_id' => 'required|exists:services,id',
-            'appointment_date' => 'required|date',
-            'status' => 'required|in:pending,confirmed,canceled',
-            'notes' => 'nullable|string',
-        ]);
-
-        if (auth()->user()->isPatient()) {
-            $validated['patient_id'] = auth()->id();
-        }
-
-        $appointment = Appointment::create($validated);
-
-        \App\Events\AppointmentCreated::dispatch($appointment);
-
-        return redirect()->route('appointments.index')->with('success', 'Rendez-vous créé.');
+{
+    if (!$request->user()->isDoctor()) {
+        return response()->json(['message' => 'Unauthorized'], 403);
     }
+    
+    $validated = $request->validate([
+        'patient_id' => 'required|exists:users,id',
+        'doctor_id' => 'required|exists:users,id',
+        'service_id' => 'required|exists:services,id',
+        'appointment_date' => 'required|date',
+        'status' => 'required|in:pending,confirmed,canceled',
+        'notes' => 'nullable|string',
+    ]);
+
+    $appointment = Appointment::create($validated);
+
+    \App\Events\AppointmentCreated::dispatch($appointment);
+
+    return redirect()->route('appointments.index')->with('success', __('Rendez-vous créé.'));
+}
 
     public function show(Appointment $appointment)
     {

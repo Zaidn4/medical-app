@@ -11,6 +11,10 @@
             <a href="{{ route('appointments.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 transition-colors">
                 {{ __('Gestion des Rendez-vous') }}
             </a>
+            
+            <a href="{{ route('patients.create') }}" class="block px-4 py-2 rounded hover:bg-gray-700 transition-colors text-indigo-300 hover:text-white">
+                + {{ __('Ajouter un Patient') }}
+            </a>
         @else
             <a href="{{ route('appointments.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 transition-colors">
                 {{ __('Mes Rendez-vous') }}

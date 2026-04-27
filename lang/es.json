@@ -24,5 +24,18 @@
     "Date et Heure": "Fecha y Hora",
     "Ajout Rapide : Rendez-vous": "Añadir Rápido: Cita",
     "Modifier le Rendez-vous": "Editar Cita",
-    "Menu": "Menú"
+    "Menu": "Menú",
+    "Ajouter un Nouveau Patient": "Añadir un nuevo paciente",
+    "Ajouter un Patient": "Añadir paciente",
+    "Retour aux rendez-vous": "Volver a las citas",
+    "Nom complet": "Nombre completo",
+    "Adresse Email": "Correo electrónico",
+    "Mot de passe temporaire": "Contraseña temporal",
+    "Confirmer le mot de passe": "Confirmar contraseña",
+    "Créer le dossier patient": "Crear expediente del paciente",
+    "Patient ajouté avec succès. Vous pouvez maintenant lui assigner un rendez-vous.": "Paciente añadido con éxito. Ahora puede asignarle una cita.",
+    "Total Patients": "Pacientes Totales",
+    "Total Rendez-vous": "Citas Totales",
+    "Rendez-vous Aujourd'hui": "Citas Hoy",
+    "Rendez-vous à venir": "Próximas Citas"
 }

@@ -15,7 +15,7 @@ Suivez ces étapes pour configurer le projet localement :
 
 1. **Cloner le dépôt :**
    ```bash
-   git clone git@github.com:Zaidn4/medical-app.git
+   git clone https://github.com/Zaidn4/medical-app.git
    cd cabinet-medical
 
 2. **Installer les dépendances PHP et Node :**

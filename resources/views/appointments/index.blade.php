@@ -4,9 +4,11 @@
 <div class="container mx-auto">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">{{ __('Rendez-vous') }}</h1>
-        <button onclick="openAddModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-            {{ __('+ Nouveau Rendez-vous') }}
-        </button>    
+        @if(auth()->user()->isDoctor())
+    <button onclick="openAddModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+        + {{ __('Nouveau Rendez-vous') }}
+    </button>
+        @endif   
     </div>
 
     @if(session('success'))
@@ -39,21 +41,25 @@
                     <td class="py-4 px-6 border-b border-gray-200">{{ $appointment->service->name }}</td>
                     <td class="py-4 px-6 border-b border-gray-200">{{ __(ucfirst($appointment->status)) }}</td>
                     <td class="py-4 px-6 border-b border-gray-200 flex gap-4">
-                    <button type="button" 
-                        onclick="openEditModal(this)" 
-                        data-id="{{ $appointment->id }}"
-                        data-patient="{{ $appointment->patient_id }}"
-                        data-doctor="{{ $appointment->doctor_id }}"
-                        data-service="{{ $appointment->service_id }}"
-                        data-date="{{ $appointment->appointment_date->format('Y-m-d\TH:i') }}"
-                        data-status="{{ $appointment->status }}"
-                        class="text-blue-500 hover:text-blue-700 font-medium">
-                        {{ __('Modifier') }}
-                    </button>                        
+                        @if(auth()->user()->isDoctor())
+                            <button type="button" 
+                                onclick="openEditModal(this)" 
+                                data-id="{{ $appointment->id }}"
+                                data-patient="{{ $appointment->patient_id }}"
+                                data-doctor="{{ $appointment->doctor_id }}"
+                                data-service="{{ $appointment->service_id }}"
+                                data-date="{{ $appointment->appointment_date->format('Y-m-d\TH:i') }}"
+                                data-status="{{ $appointment->status }}"
+                                class="text-blue-500 hover:text-blue-700 font-medium">
+                                {{ __('Modifier') }}
+                            </button>                        
 
-                        <button type="button" onclick="openDeleteModal({{ $appointment->id }})" class="text-red-600 hover:text-red-900 font-medium">
-                            {{ __('Supprimer') }}
-                        </button>
+                            <button type="button" onclick="openDeleteModal({{ $appointment->id }})" class="text-red-600 hover:text-red-900 font-medium">
+                                {{ __('Supprimer') }}
+                            </button>
+                        @else
+                            <span class="text-gray-400 text-sm italic">{{ __('Lecture seule') }}</span>
+                        @endif
                     </td>
                 </tr>
                 @endforeach
@@ -143,7 +149,6 @@
 </div>
 
 
-{{-- Modal Modification --}}
 <div id="editModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 transition-opacity">
     <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
         <h2 class="text-xl font-bold mb-4 text-gray-800">{{ __('Modifier le Rendez-vous') }}</h2>
@@ -318,9 +323,7 @@
             });
     });
 
-    // Edit Modal Functions
     function openEditModal(button) {
-        // 1. Get the data attributes from the clicked button
         const id = button.getAttribute('data-id');
         const patientId = button.getAttribute('data-patient');
         const doctorId = button.getAttribute('data-doctor');
@@ -328,11 +331,9 @@
         const date = button.getAttribute('data-date');
         const status = button.getAttribute('data-status');
 
-        // 2. Set the form action URL dynamically
         const form = document.getElementById('editForm');
         form.action = `/appointments/${id}`;
 
-        // 3. Pre-fill the form inputs
         if (document.getElementById('edit_patient_id')) {
             document.getElementById('edit_patient_id').value = patientId;
         }

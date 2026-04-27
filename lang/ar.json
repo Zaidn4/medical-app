@@ -24,5 +24,18 @@
     "Date et Heure": "التاريخ والوقت",
     "Ajout Rapide : Rendez-vous": "إضافة سريعة: موعد",
     "Modifier le Rendez-vous": "تعديل الموعد",
-    "Menu": "القائمة"
+    "Menu": "القائمة",
+    "Ajouter un Nouveau Patient": "إضافة مريض جديد",
+    "Ajouter un Patient": "إضافة مريض",
+    "Retour aux rendez-vous": "العودة إلى المواعيد",
+    "Nom complet": "الاسم الكامل",
+    "Adresse Email": "البريد الإلكتروني",
+    "Mot de passe temporaire": "كلمة مرور مؤقتة",
+    "Confirmer le mot de passe": "تأكيد كلمة المرور",
+    "Créer le dossier patient": "إنشاء ملف المريض",
+    "Patient ajouté avec succès. Vous pouvez maintenant lui assigner un rendez-vous.": "تمت إضافة المريض بنجاح. يمكنك الآن تعيين موعد له.",
+    "Total Patients": "إجمالي المرضى",
+    "Total Rendez-vous": "إجمالي المواعيد",
+    "Rendez-vous Aujourd'hui": "مواعيد اليوم",
+    "Rendez-vous à venir": "المواعيد القادمة"
 }
